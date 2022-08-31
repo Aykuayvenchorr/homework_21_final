@@ -19,7 +19,7 @@ class AbstractStorage(ABC):
         pass
 
 
-class Store:
+class Store(AbstractStorage):
     def __init__(self, items: dict[str, int], capacity: int = 100):
         self.__items = items
         self.__capacity = capacity
@@ -60,49 +60,28 @@ class Store:
         return len(self.__items)
 
 
-class Shop:
+class Shop(Store):
     def __init__(self, items: dict[str, int], capacity: int = 20):
-        self.__items = items
-        self.__capacity = capacity
+        super().__init__(items=items, capacity=capacity)
 
     def add(self, name, amount):
-        if self.get_free_space() < amount:
-            print('Недостаточно места на складе')
-            exit()
         if self.get_unique_items_count() >= 5:
             print('Слишком много разных товаров')
             exit()
 
-        if name in self.__items:
-            self.__items[name] += amount
-        else:
-            self.__items[name] = amount
+        super().add(name=name, amount=amount)
 
     def remove(self, name, amount):
-        if self.__items[name] < amount:
-            print('Недостаточно товара на складе')
-            exit()
-
-        if name not in self.__items:
-            print('Такого товара нет на складе')
-            exit()
-
-        self.__items[name] -= amount
-        if self.__items[name] == 0:
-            self.__items.pop(name)
+        super().remove(name=name, amount=amount)
 
     def get_free_space(self):
-        current_space = 0
-        for value in self.__items.values():
-            current_space += value
-
-        return self.__capacity - current_space
+        super().get_free_space()
 
     def get_items(self):
-        return self.__items
+        super().get_items()
 
     def get_unique_items_count(self):
-        return len(self.__items)
+        super().get_unique_items_count()
 
 
 class Request:
@@ -137,5 +116,3 @@ class Courier:
 
         self.__to.add(name=self.__request.product, amount=self.__request.amount)
         print(f"Курьер доставил {self.__request.amount} {self.__request.product} в {self.__request.destination}")
-
-# hgjhjkjrgdk

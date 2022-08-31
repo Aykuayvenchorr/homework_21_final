@@ -1,4 +1,5 @@
 from classes import Shop, Store, Request, Courier
+from excepts import BaseError, InvalidRequest
 
 store = Store(items={
     "торт": 5,
@@ -28,9 +29,18 @@ def main():
         if user_input in ("стоп", "stop"):
             break
 
-        request = Request(user_input)
+        try:
+            request = Request(user_input)
+        except InvalidRequest as e:
+            print(e.message)
+            continue
+
         courier = Courier(request=request, store=store, shop=shop)
-        courier.move()
+
+        try:
+            courier.move()
+        except BaseError as e:
+            print(e.message)
 
 
 if __name__ == "__main__":

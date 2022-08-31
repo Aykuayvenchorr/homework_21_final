@@ -1,5 +1,8 @@
 from abc import ABC, abstractmethod
 
+from excepts import NotEnoughSpaceStore, NotEnoughProductStore, NoProductInStore, TooManyDifferentProduct, \
+    InvalidRequest
+
 
 class AbstractStorage(ABC):
     @abstractmethod
@@ -26,8 +29,7 @@ class Store(AbstractStorage):
 
     def add(self, name, amount):
         if self.get_free_space() < amount:
-            print('Недостаточно места на складе')
-            exit()
+            raise NotEnoughSpaceStore
 
         if name in self.__items:
             self.__items[name] += amount
@@ -36,12 +38,10 @@ class Store(AbstractStorage):
 
     def remove(self, name, amount):
         if self.__items[name] < amount:
-            print('Недостаточно товара на складе')
-            exit()
+            raise NotEnoughProductStore
 
         if name not in self.__items:
-            print('Такого товара нет на складе')
-            exit()
+            raise NoProductInStore
         self.__items[name] -= amount
         if self.__items[name] == 0:
             self.__items.pop(name)
@@ -66,8 +66,7 @@ class Shop(Store):
 
     def add(self, name, amount):
         if self.get_unique_items_count() >= 5:
-            print('Слишком много разных товаров')
-            exit()
+            raise TooManyDifferentProduct
 
         super().add(name=name, amount=amount)
 
@@ -75,20 +74,20 @@ class Shop(Store):
         super().remove(name=name, amount=amount)
 
     def get_free_space(self):
-        super().get_free_space()
+        return super().get_free_space()
 
     def get_items(self):
-        super().get_items()
+        return super().get_items()
 
     def get_unique_items_count(self):
-        super().get_unique_items_count()
+        return super().get_unique_items_count()
 
 
 class Request:
     def __init__(self, request):
         splitted_request = request.lower().split(' ')
         if len(splitted_request) != 7:
-            print("Неправильный запрос")
+            raise InvalidRequest
 
         self.amount = int(splitted_request[1])
         self.product = splitted_request[2]

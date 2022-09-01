@@ -70,18 +70,6 @@ class Shop(Store):
 
         super().add(name=name, amount=amount)
 
-    def remove(self, name, amount):
-        super().remove(name=name, amount=amount)
-
-    def get_free_space(self):
-        return super().get_free_space()
-
-    def get_items(self):
-        return super().get_items()
-
-    def get_unique_items_count(self):
-        return super().get_unique_items_count()
-
 
 class Request:
     def __init__(self, request):
